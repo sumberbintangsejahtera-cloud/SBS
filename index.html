@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name Card : ADMIN - SBS</title>
+    <!-- Font & Icon -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* HEADER JUDUL */
+        .card-header-title {
+            color: #bd9b4c;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* GAMBAR KARTU NAMA ASLI */
+        .card-image-wrapper {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            background: #000;
+        }
+
+        .card-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 14px;
+        }
+
+        /* TOMBOL AKSI INTERAKTIF */
+        .action-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-title {
+            color: #a0a0a0;
+            font-size: 11px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s ease, filter 0.2s;
+            flex: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-wa { background-color: #25D366; }
+        .btn-save { background-color: #005a36; }
+        .btn-email { background-color: #ea4335; }
+        .btn-maps { background-color: #4285F4; }
+        .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- TULISAN JUDUL -->
+    <div class="card-header-title">Name Card : ADMIN - SBS</div>
+
+    <!-- 1. GAMBAR KARTU NAMA PRESISI -->
+    <div class="card-image-wrapper">
+        <img src="kartu-nama.jpg" alt="Kartu Nama ADMIN - SBS">
+    </div>
+
+    <!-- 2. TOMBOL AKSI INTERAKTIF -->
+    <div class="action-section">
+        <div class="action-title">Pilih Aksi Kontak</div>
+
+        <div class="btn-group">
+            <!-- WA & Simpan Kontak -->
+            <div class="btn-row">
+                <a href="https://wa.me/6287711237878" target="_blank" class="btn btn-wa">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <button onclick="downloadVCard()" class="btn btn-save">
+                    <i class="fa-solid fa-address-card"></i> Simpan Kontak
+                </button>
+            </div>
+
+            <!-- Email Admin 1 -->
+            <a href="mailto:salesbangka.sbs@gmail.com" class="btn btn-email">
+                <i class="fa-solid fa-envelope"></i> Email Admin 1
+            </a>
+
+            <!-- Email Admin 2 -->
+            <a href="mailto:sbsfood.id@gmail.com" class="btn btn-email">
+                <i class="fa-solid fa-envelope"></i> Email Admin 2
+            </a>
+
+            <!-- Alamat Google Maps -->
+            <a href="https://maps.app.goo.gl/H7Swsbs2n3p2KEzL7" target="_blank" class="btn btn-maps">
+                <i class="fa-solid fa-map-location-dot"></i> Buka Google Maps
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com/sbsfrozen" target="_blank" class="btn btn-ig">
+                <i class="fa-brands fa-instagram"></i> Instagram @sbsfrozen
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Script vCard / Simpan Kontak -->
+<script>
+function downloadVCard() {
+    const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:ADMIN SBS
+ORG:Sumber Bintang Sejahtera
+TITLE:ADMIN
+TEL;TYPE=CELL:+6287711237878
+EMAIL;TYPE=INTERNET:salesbangka.sbs@gmail.com
+EMAIL;TYPE=INTERNET:sbsfood.id@gmail.com
+URL:https://instagram.com/sbsfrozen
+END:VCARD`;
+
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ADMIN_SBS.vcf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+</script>
+
+</body>
+</html>

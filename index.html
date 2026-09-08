@@ -109,11 +109,83 @@
         }
 
         .btn-wa { background-color: #25D366; }
-        .btn-save { background-color: #005a36; }
+        .btn-save { background-color: #005a36; animation: pulse 2s infinite; }
         .btn-email { background-color: #ea4335; }
         .btn-maps { background-color: #4285F4; }
         .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .btn-katalog { background-color: #d97706; } /* Warna Oranye Khusus Katalog */
+        .btn-pricelist { background-color: #059669; } /* Warna Hijau Khusus Price List */
 
+        /* ANIMASI TOMBOL SIMPAN KONTAK */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 90, 54, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 90, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 90, 54, 0); }
+        }
+
+        /* POPUP MODAL TERIMA KASIH */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #1e1e1e;
+            border: 2px solid #bd9b4c;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            max-width: 350px;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-box h3 {
+            color: #bd9b4c;
+            margin-bottom: 12px;
+            font-size: 17px;
+            line-height: 1.4;
+        }
+
+        .modal-box p {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            background-color: #005a36;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .modal-btn-close {
+            background-color: #bd9b4c;
+            color: #121212;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +197,7 @@
 
     <!-- 1. GAMBAR KARTU NAMA PRESISI -->
     <div class="card-image-wrapper">
-        <img src="kartu-nama.png" alt="Kartu Nama ADMIN - SBS">
+        <img src="kartu-nama.jpg" onerror="this.onerror=null; this.src='kartu-nama.png';" alt="Kartu Nama ADMIN - SBS">
     </div>
 
     <!-- 2. TOMBOL AKSI INTERAKTIF -->
@@ -138,7 +210,7 @@
                 <a href="https://wa.me/6287711237878" target="_blank" class="btn btn-wa">
                     <i class="fa-brands fa-whatsapp"></i> WhatsApp
                 </a>
-                <button onclick="downloadVCard()" class="btn btn-save">
+                <button onclick="downloadVCard()" class="btn btn-save" id="btnSaveContact">
                     <i class="fa-solid fa-address-card"></i> Simpan Kontak
                 </button>
             </div>
@@ -162,14 +234,39 @@
             <a href="https://instagram.com/sbsfrozen" target="_blank" class="btn btn-ig">
                 <i class="fa-brands fa-instagram"></i> Instagram @sbsfrozen
             </a>
+
+            <!-- TOMBOL KATALOG & PRICE LIST (DI BAWAH INSTAGRAM) -->
+            <div class="btn-row">
+                <a href="#" target="_blank" class="btn btn-katalog">
+                    <i class="fa-solid fa-book-open"></i> Katalog
+                </a>
+                <a href="#" target="_blank" class="btn btn-pricelist">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Price List
+                </a>
+            </div>
         </div>
     </div>
 
 </div>
 
-<!-- Script vCard / Simpan Kontak -->
+<!-- MODAL POPUP TERIMA KASIH -->
+<div class="modal-overlay" id="thankYouModal">
+    <div class="modal-box">
+        <i class="fa-solid fa-circle-check" style="font-size: 45px; color: #25D366; margin-bottom: 15px;"></i>
+        <h3>Terima Kasih Telah Mengunjungi Halaman Contact SBS Frozen Food - PKP</h3>
+        <p>File kontak (.vcf) telah diunduh. Silakan buka file tersebut untuk menyimpannya ke ponsel Anda.</p>
+        <button class="modal-btn modal-btn-close" onclick="closeThankYouModal()">
+            Tutup
+        </button>
+    </div>
+</div>
+
+<!-- Script vCard & Event Listener -->
 <script>
+let hasSavedContact = false;
+
 function downloadVCard() {
+    hasSavedContact = true;
     const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:ADMIN SBS
@@ -189,7 +286,25 @@ END:VCARD`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    // Tampilkan Pop-up Ucapan Terima Kasih setelah mengunduh kontak
+    setTimeout(function() {
+        document.getElementById('thankYouModal').style.display = 'flex';
+    }, 500);
 }
+
+function closeThankYouModal() {
+    document.getElementById('thankYouModal').style.display = 'none';
+}
+
+// Peringatan jika pengguna belum menekan tombol Simpan Kontak sebelum meninggalkan halaman
+window.addEventListener('beforeunload', function (e) {
+    if (!hasSavedContact) {
+        const confirmationMessage = 'Anda belum menyimpan kontak SBS. Yakin ingin keluar?';
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    }
+});
 </script>
 
 </body>

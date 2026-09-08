@@ -124,7 +124,7 @@
             100% { box-shadow: 0 0 0 0 rgba(0, 90, 54, 0); }
         }
 
-        /* POPUP MODAL TERIMA KASIH */
+        /* POPUP MODAL TERIMA KASIH & PERINGATAN */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -159,7 +159,7 @@
         .modal-box h3 {
             color: #bd9b4c;
             margin-bottom: 12px;
-            font-size: 17px;
+            font-size: 16px;
             line-height: 1.4;
         }
 
@@ -231,14 +231,14 @@
                 </a>
             </div>
 
-            <!-- TOMBOL KATALOG & PRICE LIST (GOOGLE DRIVE) -->
+            <!-- TOMBOL KATALOG & PRICE LIST (DENGAN PROTEKSI SAVE CONTACT) -->
             <div class="btn-row">
-                <a href="https://drive.google.com/drive/folders/1BiJChniBrsOKLaPIkOLoYbbay9mW0J18?usp=drive_link" target="_blank" class="btn btn-katalog">
+                <button onclick="openProtectedLink('https://drive.google.com/drive/folders/1BiJChniBrsOKLaPIkOLoYbbay9mW0J18?usp=drive_link')" class="btn btn-katalog">
                     <i class="fa-solid fa-book-open"></i> Katalog
-                </a>
-                <a href="https://drive.google.com/drive/folders/1uQF52nxNg2oZzvQJAEceqCzDi-bKaaiQ?usp=drive_link" target="_blank" class="btn btn-pricelist">
+                </button>
+                <button onclick="openProtectedLink('https://drive.google.com/drive/folders/1uQF52nxNg2oZzvQJAEceqCzDi-bKaaiQ?usp=drive_link')" class="btn btn-pricelist">
                     <i class="fa-solid fa-file-invoice-dollar"></i> Price List
-                </a>
+                </button>
             </div>
 
             <!-- Email Admin 1 (Paling Bawah) -->
@@ -261,16 +261,29 @@
         <i class="fa-solid fa-circle-check" style="font-size: 45px; color: #25D366; margin-bottom: 15px;"></i>
         <h3>Terima Kasih Telah Mengunjungi Halaman Contact SBS Frozen Food - PKP</h3>
         <p>File kontak (.vcf) telah diunduh. Silakan buka file tersebut untuk menyimpannya ke ponsel Anda.</p>
-        <button class="modal-btn modal-btn-close" onclick="closeThankYouModal()">
+        <button class="modal-btn modal-btn-close" onclick="closeModal('thankYouModal')">
             Tutup
         </button>
     </div>
 </div>
 
-<!-- Script vCard & Event Listener -->
+<!-- MODAL POPUP PERINGATAN (WAJIB SAVE CONTACT) -->
+<div class="modal-overlay" id="warningModal">
+    <div class="modal-box">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size: 45px; color: #f59e0b; margin-bottom: 15px;"></i>
+        <h3>Simpan Kontak Terlebih Dahulu</h3>
+        <p>Anda wajib menekan tombol <b>"Simpan Kontak"</b> terlebih dahulu untuk dapat mengakses Katalog atau Price List.</p>
+        <button class="modal-btn" onclick="closeModalAndHighlightSave()">
+            <i class="fa-solid fa-address-card"></i> Simpan Kontak Sekarang
+        </button>
+    </div>
+</div>
+
+<!-- Script vCard & Logika Proteksi Link -->
 <script>
 let hasSavedContact = false;
 
+// Fungsi Mengunduh vCard
 function downloadVCard() {
     hasSavedContact = true;
     const vcard = `BEGIN:VCARD
@@ -293,14 +306,31 @@ END:VCARD`;
     a.click();
     document.body.removeChild(a);
 
-    // Tampilkan Pop-up Ucapan Terima Kasih setelah mengunduh kontak
+    // Tampilkan Pop-up Ucapan Terima Kasih
     setTimeout(function() {
         document.getElementById('thankYouModal').style.display = 'flex';
     }, 500);
 }
 
-function closeThankYouModal() {
-    document.getElementById('thankYouModal').style.display = 'none';
+// Fungsi Membuka Link Katalog / Price List
+function openProtectedLink(targetUrl) {
+    if (hasSavedContact) {
+        window.open(targetUrl, '_blank');
+    } else {
+        // Jika belum simpan kontak, tampilkan modal peringatan
+        document.getElementById('warningModal').style.display = 'flex';
+    }
+}
+
+// Fungsi Menutup Modal
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Fungsi Menutup Warning & Memicu Download Kontak
+function closeModalAndHighlightSave() {
+    closeModal('warningModal');
+    downloadVCard();
 }
 
 // Peringatan jika pengguna belum menekan tombol Simpan Kontak sebelum meninggalkan halaman
